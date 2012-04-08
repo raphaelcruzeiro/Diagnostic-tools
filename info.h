@@ -15,6 +15,22 @@ struct meminfo {
     int inactive;
 };
 
+struct processor {
+    int processor;
+    char *modelname;
+    int cachesize;
+    int cpucores;
+    int coreid;
+    double cpuMHz;
+};
+
+struct cpuinfo {
+    int processors;
+    struct processor *procs;
+};
+
+void addprocessor(struct cpuinfo *info, struct processor *proc);
 void get_meminfo(struct meminfo *info);
+void get_cpuinfo(struct cpuinfo *info);
 
 #endif
