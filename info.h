@@ -17,7 +17,7 @@ struct meminfo {
 
 struct processor {
     int processor;
-    char *modelname;
+    char modelname[60];
     int cachesize;
     int cpucores;
     int coreid;
@@ -26,10 +26,12 @@ struct processor {
 
 struct cpuinfo {
     int processors;
-    struct processor *procs;
+    struct processor procs[20];
 };
 
-void addprocessor(struct cpuinfo *info, struct processor *proc);
+struct cpuinfo* cpuinfoMake();
+void cpuinfoFree(struct cpuinfo* info);
+
 void get_meminfo(struct meminfo *info);
 void get_cpuinfo(struct cpuinfo *info);
 

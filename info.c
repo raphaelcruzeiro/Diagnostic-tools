@@ -1,16 +1,14 @@
 #include "info.h"
 
-void addprocessor(struct cpuinfo *info, struct processor *proc)
+struct cpuinfo* cpuinfoMake()
 {
-    if (!info->procs) {
-        info->procs = (struct processor*) malloc(sizeof(struct processor));
-        info->procs[0] = *proc;
-        return;
-    }
+    struct cpuinfo* info = malloc(sizeof(struct cpuinfo));
+    return info;
+}
 
-    int lenght = sizeof(struct processor)  * (sizeof(info->procs) / sizeof(struct processor));
-    info->procs = (struct processor*) realloc(info->procs, sizeof(struct processor*) * 3 + lenght);
-    info->procs [lenght] = *proc;
+void cpuinfoFree(struct cpuinfo* info)
+{
+    free(info);
 }
 
 void get_meminfo(struct meminfo *info)
@@ -56,30 +54,46 @@ void get_cpuinfo(struct cpuinfo *info)
     FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
 
     char line[180];
-
+    int count = 0;
+    info->processors = 0;
+    int gotProc, gotModel, gotMHz, gotCache;
+    gotProc = gotModel = gotMHz = gotCache = 0;
+    struct processor *proc = 0;
     while(fgets(line, 180, cpuinfo)) {
-        struct processor proc;
         char *delimiter = ":";
         char *label = strtok(line, delimiter);
         char *val = strtok(NULL, delimiter);
-        delete_char(val, '\n', strlen(val));
-        delete_char(label, ' ', strlen(label));
+        if (val) {
+            if(!proc)
+                proc = malloc(sizeof(struct processor));
+            delete_char(val, '\n', strlen(val));
+            remove_whitespace(label, strlen(label));
 
-        if(strcmp(label, "processor") == 0) {
-            proc.processor = atoi(val);
-        }
-        else if(strcmp(label, "modelname") == 0) {
-            proc.modelname = val;
-        }
-        else if(strcmp(label, "cpuMHz") == 0) {
-            proc.cpuMHz = strtod(val, NULL);
-        }
-        else if(strcmp(label, "cachesize") == 0) {
-            proc.cachesize = atoi(val);
-        }
+            if(strcmp(label, "processor") == 0) {
+                proc->processor = atoi(val);
+                info->processors++;
+                gotProc = 1;
+            }
+            else if(strcmp(label, "modelname") == 0) {
+                strcpy(proc->modelname, val);
+                gotModel = 1;
+            }
+            else if(strcmp(label, "cpuMHz") == 0) {
+                proc->cpuMHz = strtod(val, NULL);
+                gotMHz =1;
+            }
+            else if(strcmp(label, "cachesize") == 0) {
+                proc->cachesize = atoi(val);
+                gotCache = 1;
+            }
 
-        addprocessor(info, &proc);
+            if(gotProc && gotModel && gotMHz && gotCache)  {
+                info->procs[count] = *proc;
+                count++;
+                gotProc = gotModel = gotMHz = gotCache = 0;
+                continue;
+            }
+        }
     }
-
     fclose(cpuinfo);
 }

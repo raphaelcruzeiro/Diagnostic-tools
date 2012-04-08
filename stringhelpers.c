@@ -1,5 +1,16 @@
 #include "stringhelpers.h"
 
+void remove_whitespace(char *src, int len)
+{
+    char* dest = src;
+    while(*src != '\0') {
+        if (!isspace(*src))
+            *dest++ = *src;
+        src++;
+    }
+    *dest = 0;
+}
+
 void delete_char(char *src, char c, int len)
 {
     char *dest;
@@ -21,3 +32,12 @@ void delete_char(char *src, char c, int len)
     return;
 }
 
+int is_empty(const char* str)
+{
+    while(*str != '\0') {
+        if (!isspace(*str)) return 0;
+        str++;
+    }
+
+    return 1;
+}
