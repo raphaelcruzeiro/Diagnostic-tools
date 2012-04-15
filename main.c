@@ -20,13 +20,10 @@ int main(int argc, char *argv[])
     printf("Total memory: %d\n", info.memtotal);
     printf("Free memory: %d\n", info.memfree);
 
-    printf("Processor info:\n");
-
     struct cpuinfo *cinfo;
     cinfo = cpuinfoMake();
     get_cpuinfo(cinfo);
-
-    printf("%d\n", cinfo->processors);
+    printf("Processor number: %d\n", cinfo->processors);
 
     for(i = 0; i < cinfo->processors; i++) {
         printf("Model name: %s\n", cinfo->procs[i].modelname);
