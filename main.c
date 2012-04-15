@@ -31,5 +31,13 @@ int main(int argc, char *argv[])
     }
 
     cpuinfoFree(cinfo);
+    struct cpustat st;
+    get_stat(&st);
+
+    int total = st.user + st.nice + st.system + st.idle + st.iowait + st.irq + st.softirq;
+    double load = (total - st.idle) / (total / 100.0);
+    printf("Total:%d\nIdle:%d\n", total, st.idle);
+    printf("System load:%f%%\n", load);
+
     return 0;
 }

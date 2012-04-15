@@ -97,3 +97,43 @@ void get_cpuinfo(struct cpuinfo *info)
     }
     fclose(cpuinfo);
 }
+
+void get_stat(struct cpustat *st)
+{
+    FILE *_stat = fopen("/proc/stat", "r");
+    char line[180];
+    while(fgets(line, 180, _stat)) {
+        char *delimiter = " ";
+        char *cpu = strtok(line, delimiter);
+        char *slice = 0;
+    	int pos = 0;
+        while(slice = strtok(NULL, delimiter)) {
+            int val = atoi(slice);
+            switch(pos) {
+                case 0:
+                    st->user = val;
+                    break;
+                case 1:
+                    st->nice = val;
+                    break;
+                case 2:
+                    st->system = val;
+                    break;
+                case 3:
+                    st->idle = val;
+                    break;
+                case 4:
+                    st->iowait = val;
+                    break;
+                case 5:
+                    st->irq = val;
+                    break;
+                case 6:
+                    st->softirq = val;
+                    break;
+            }
+            pos++;
+        }
+        return;
+    }
+}

@@ -24,6 +24,16 @@ struct processor {
     double cpuMHz;
 };
 
+struct cpustat {
+    int user;
+    int nice;
+    int system;
+    int idle;
+    int iowait;
+    int irq;
+    int softirq;
+};
+
 struct cpuinfo {
     int processors;
     struct processor procs[20];
@@ -34,5 +44,6 @@ void cpuinfoFree(struct cpuinfo* info);
 
 void get_meminfo(struct meminfo *info);
 void get_cpuinfo(struct cpuinfo *info);
+void get_stat(struct cpustat *st);
 
 #endif
