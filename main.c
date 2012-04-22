@@ -4,6 +4,8 @@
 #include "daemon.h"
 #include "info.h"
 #include "comm.h"
+#include "serializer.h"
+#include "stringhelpers.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +13,28 @@ int main(int argc, char *argv[])
 
     for (i = 0; i < argc; i++) {
         if (strcmp("--init-daemon", argv[i]) == 0) {
-            startDaemon();
+            FILE *f;
+            if (f = fopen(".conf", "r")) {
+                fclose(f);
+                startDaemon();
+            }
+            printf("No configuration file present. Use --config.\n");
+            exit(0);
+        }
+        else if (strcmp("--config", argv[i]) == 0) {
+            printf("Enter your login: ");
+            char login[50];
+            scanf("%s", login);
+            printf("Enter your password: ");
+            char password[50];
+            scanf("%s", password);
+
+            FILE *config = fopen(".conf", "w");
+            char content[150];
+            fprintf(config, "login:%s\n", login);
+            fprintf(config, "password:%s\n", password);
+            fclose(config);
+            exit(0);
         }
         else if (strcmp("--test-connection", argv[i]) == 0) {
             post(NULL);

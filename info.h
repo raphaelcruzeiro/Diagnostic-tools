@@ -39,11 +39,21 @@ struct cpuinfo {
     struct processor procs[20];
 };
 
+struct diagnostics {
+    long time;
+    struct meminfo memory;
+    struct cpustat cpustatus;
+    struct cpuinfo cpu;
+};
+
 struct cpuinfo* cpuinfoMake();
 void cpuinfoFree(struct cpuinfo* info);
 
 void get_meminfo(struct meminfo *info);
 void get_cpuinfo(struct cpuinfo *info);
 void get_stat(struct cpustat *st);
+
+void get_diagnostics(struct diagnostics *d);
+void freeDiagnostics(struct diagnostics *d);
 
 #endif

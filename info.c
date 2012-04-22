@@ -1,4 +1,5 @@
 #include "info.h"
+#include <time.h>
 
 struct cpuinfo* cpuinfoMake()
 {
@@ -136,4 +137,17 @@ void get_stat(struct cpustat *st)
         }
         return;
     }
+}
+
+void get_diagnostics(struct diagnostics *d)
+{
+    d->time = (long)time(NULL);
+    get_meminfo(&d->memory);
+    get_cpuinfo(&d->cpu);
+    get_stat(&d->cpustatus);
+}
+
+void freeDiagnostics(struct diagnostics *d)
+{
+    cpuinfoFree(&d->cpu);
 }

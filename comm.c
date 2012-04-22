@@ -54,10 +54,11 @@ int post(char *data)
     char buf[1024];
     memset(buf, 0, sizeof(buf));
 
-    char send[1024];
+    char send[2048];
     memset(send, 0, sizeof(send));
 
-    strcat(send, "GET / HTTP/1.1\nHost:google.com\nUser:ssltest\nConnection: Close\n\n");
+    strcat(send, "POST / HTTP/1.1\nHost:23.23.212.78\nUser:ssltest\nContent-Type:text\n\n");
+    strcat(send, data);
 
     BIO_puts(bio, send);
     int res;
