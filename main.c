@@ -3,6 +3,7 @@
 #include <string.h>
 #include "daemon.h"
 #include "info.h"
+#include "comm.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +12,9 @@ int main(int argc, char *argv[])
     for (i = 0; i < argc; i++) {
         if (strcmp("--init-daemon", argv[i]) == 0) {
             startDaemon();
+        }
+        else if (strcmp("--test-connection", argv[i]) == 0) {
+            post(NULL);
         }
     }
 
