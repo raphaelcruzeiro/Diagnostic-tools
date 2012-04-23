@@ -64,6 +64,8 @@ void startDaemon(FILE *config)
         char xml[2048];
         serialize(&d, login, password, &xml);
 
+        syslog(LOG_DEBUG, "Got diagnostics.");
+
         post(&xml);
 
         syslog(LOG_INFO, "Posting...");

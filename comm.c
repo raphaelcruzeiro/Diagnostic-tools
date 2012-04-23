@@ -27,7 +27,7 @@ int post(char *data)
     BIO *bio = BIO_new_ssl_connect(ctx);
 
     if (!SSL_CTX_load_verify_locations(ctx, "server.crt", NULL)) {
-        printf("Failed to load the certificate store.\n");
+        syslog(LOG_ERR, "Failed to load the certificate store.\n");
         BIO_free_all(bio);
         SSL_CTX_free(ctx);
         return 0;
@@ -40,14 +40,14 @@ int post(char *data)
     BIO_set_conn_hostname(bio, "23.23.212.78:https");
 
     if(BIO_do_connect(bio) <= 0) {
-        printf("Failed to connect.\n%s\n", ERR_reason_error_string(ERR_get_error()));
+        syslog(LOG_ERR, "Failed to connect.\n%s\n", ERR_reason_error_string(ERR_get_error()));
         BIO_free_all(bio);
         SSL_CTX_free(ctx);
         return 0;
     }
 
     if(SSL_get_verify_result(ssl) != X509_V_OK) {
-        printf("Untrusted certificate. Aborting!");
+        syslog(LOG_ERR, "Untrusted certificate. Aborting!");
         BIO_free_all(bio);
         SSL_CTX_free(ctx);
         return 0;
