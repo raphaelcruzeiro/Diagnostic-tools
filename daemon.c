@@ -66,6 +66,8 @@ void startDaemon(FILE *config)
 
         post(&xml);
 
+        syslog(LOG_INFO, "Posting...");
+
         sleep(60);
     }
 

@@ -2,6 +2,7 @@
 #include <openssl/bio.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <syslog.h>
 #include "comm.h"
 
 static int init()
@@ -19,6 +20,7 @@ static int init()
 
 int post(char *data)
 {
+    openlog("diagnostics_tool", LOG_NDELAY, LOG_USER);
     init();
 
     SSL_CTX *ctx = SSL_CTX_new(SSLv23_client_method());
@@ -73,7 +75,7 @@ int post(char *data)
 
         buf[res] = 0;
 
-        printf("%s\n", buf);
+        syslog(LOG_DEBUG, "%s\n", buf);
     }
 
     BIO_free_all(bio);
