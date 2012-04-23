@@ -8,6 +8,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-void startDaemon();
+void startDaemon(FILE *config);
 
 #endif

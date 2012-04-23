@@ -57,7 +57,7 @@ int post(char *data)
     char send[2048];
     memset(send, 0, sizeof(send));
 
-    strcat(send, "POST / HTTP/1.1\nHost:23.23.212.78\nUser:ssltest\nContent-Type:text\n\n");
+    sprintf(send, "POST / HTTP/1.1\nHost:23.23.212.78\nContent-Type:text/xml\nContent-Length:%d\n\ndata:", strlen(data) + 5);
     strcat(send, data);
 
     BIO_puts(bio, send);

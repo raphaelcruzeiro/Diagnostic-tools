@@ -95,12 +95,9 @@ void serialize(struct diagnostics *d, char *login, char *password, char *out)
     int size;
     xmlDocDumpFormatMemory(doc, &xmlBuffer, &size, 1);
 
-    out = (char*) xmlBuffer;
+    sprintf(out, "%s\n", (char*)xmlBuffer);
 
+    xmlFree(xmlBuffer);
     xmlFreeDoc(doc);
-}
-
-void freeXml(char *xml) 
-{
-    xmlFree((xmlChar*)xml);
+    xmlCleanupParser();
 }

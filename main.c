@@ -15,11 +15,11 @@ int main(int argc, char *argv[])
         if (strcmp("--init-daemon", argv[i]) == 0) {
             FILE *f;
             if (f = fopen(".conf", "r")) {
-                fclose(f);
-                startDaemon();
+                startDaemon(f);
+            } else {
+                printf("No configuration file present. Use --config.\n");
+                exit(0);
             }
-            printf("No configuration file present. Use --config.\n");
-            exit(0);
         }
         else if (strcmp("--config", argv[i]) == 0) {
             printf("Enter your login: ");
@@ -37,7 +37,37 @@ int main(int argc, char *argv[])
             exit(0);
         }
         else if (strcmp("--test-connection", argv[i]) == 0) {
-            post(NULL);
+            FILE *config = fopen(".conf", "rt");
+
+            char line[100];
+
+            char login[50];
+            char password[50];
+
+             while(fgets(line, 100, config) != NULL) {
+                 char *delimiter = ":";
+                 char *label = strtok(line, delimiter);
+                 char *value = strtok(NULL, delimiter);
+
+                 delete_char(value, '\n', strlen(value));
+
+                 if (strcmp(label, "login") != 0) {
+                     strcpy(login, value);
+                 }
+                 else if (strcmp(label, "password") != 0) {
+                     strcpy(password, value);
+                 }
+             }
+
+             struct diagnostics d;
+             get_diagnostics(&d);
+
+             char xml[2048];
+             serialize(&d, login, password, &xml);
+
+             post(&xml);
+
+             exit(0);
         }
     }
 
