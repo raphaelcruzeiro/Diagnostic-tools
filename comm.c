@@ -26,6 +26,8 @@ int post(char *data)
     SSL_CTX *ctx = SSL_CTX_new(SSLv23_client_method());
     BIO *bio = BIO_new_ssl_connect(ctx);
 
+    SSL_CTX_set_timeout(ctx, 30);
+
     if (!SSL_CTX_load_verify_locations(ctx, "server.crt", NULL)) {
         syslog(LOG_ERR, "Failed to load the certificate store.\n");
         BIO_free_all(bio);
